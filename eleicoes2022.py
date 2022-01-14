@@ -7,6 +7,7 @@ from matplotlib.ticker import PercentFormatter
 
 
 st.title('Eleições Legislativas 2022')
+st.caption('Atualizado: 14/1/2022' )
 
 DETAILED_URL = ('./detailed_district.csv')
 TOTAL_URL = ('./sim_df.csv')
@@ -456,5 +457,19 @@ if option == 'Calculadora da Viabilidade':
 
     prob_viab =((sim_df[formador] +sim_df[partidos_favor].sum(axis=1)-sim_df[partidos_contra].sum(axis=1))>0).sum()/100
 
-    st.markdown('****Com esta configuração de votos na AR, em '+ str(round(prob_viab,1))+'%\
+    st.markdown('****Com esta configuração de votos na AR,em '+ str(round(prob_viab,1))+'%\
      das simulações o '+formador+' conseguiria formar governo.****')
+    
+    
+    cq_f = (sim_df[formador]+sim_df[partidos_favor].sum(axis=1)).quantile([0.025,0.975]).fillna(0).astype(int).T
+    cq_c = sim_df[partidos_contra].sum(axis=1).quantile([0.025,0.975]).fillna(0).astype(int).T
+    cq_a = sim_df[partidos_abstencao].sum(axis=1).quantile([0.025,0.975]).fillna(0).astype(int).T
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Votos pela viabilização", str(cq_f[0.025])+"-"+str(cq_f[0.975]),"")
+    c2.metric("Votos pela rejeição", str(cq_c[0.025])+"-"+str(cq_c[0.975]),"")
+    c3.metric("Abstenções", str(cq_a[0.025])+"-"+str(cq_a[0.975]),"")
+    c4.metric("Probabilidade de sucesso", str(round(prob_viab,1))+'%',"")
+
+
+
