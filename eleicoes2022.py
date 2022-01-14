@@ -7,7 +7,7 @@ from matplotlib.ticker import PercentFormatter
 
 
 st.title('Eleições Legislativas 2022')
-st.caption('Atualizado: 14/1/2022' )
+st.caption('Atualizado: 14/1/2022 - 22h50' )
 
 DETAILED_URL = ('./detailed_district.csv')
 TOTAL_URL = ('./sim_df.csv')
@@ -87,7 +87,7 @@ if option == 'Início':
     nos resultados das simulações, é obtida uma estimativa para a probabilidade de um governo ser aceito. Há 2 \
     opções de partidos formadores de governo: PS e PSD.' )
 
-    st.caption('Atualizado: 14/1/2022' )
+
 if option == 'Sondagens e Resultados':
 
     def inf(x):
@@ -470,6 +470,8 @@ if option == 'Calculadora da Viabilidade':
     c2.metric("Votos pela rejeição", str(cq_c[0.025])+"-"+str(cq_c[0.975]),"")
     c3.metric("Abstenções", str(cq_a[0.025])+"-"+str(cq_a[0.975]),"")
     c4.metric("Probabilidade de sucesso", str(round(prob_viab,1))+'%',"")
+    c1.caption('Intervalos de confiança de 95%')
+
 
 
 
