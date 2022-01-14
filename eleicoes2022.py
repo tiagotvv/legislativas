@@ -73,13 +73,14 @@ if option == 'Início':
     st.write('A opção **Sondagens e Resultados** apresenta uma tabela com a lista de sondagens utilizadas\
     pelo simulador e também apresenta os resultados globais e a distribuição dos mandatos nos círculos eleitorais')
 
-    st.write('Na opção **Partidos e Coligaçóes** é poss+ivel ver em detalhes o resultado de um partido individualmente ou criar \
+    st.write('Na opção **Partidos e Coligaçóes** é possível ver em detalhes o resultado de um partido individualmente ou criar \
     coligações hipotéticas.')
 
     st.write('A opção **Círculos Eleitorais** fornece informação detalhada a respeito da probabilidade de um candidato \
-    de uma lista partidária ser eleito no círuclo eleitoral em que concorre. Responde perguntas do tipo: "Qual a \
+    de uma lista partidária ser eleito no círculo eleitoral em que concorre. Responde perguntas do tipo: "Qual a \
     probabilidade do candidato número 3 da lista do PAN ser eleito no círculo de Lisboa?' )
 
+    st.caption('Atualizado: 14/1/2022' )
 if option == 'Sondagens e Resultados':
 
     def inf(x):
@@ -125,10 +126,13 @@ if option == 'Sondagens e Resultados':
     vote = pd.DataFrame()
     for p in sorted_parties:
         vote.loc[p, '% votos'] = polls.loc[0, dc[p]]
-        vote.loc[p, 'mandatos'] = u.loc[p,'ic']
+        margem = 196*math.sqrt(polls.loc[0, dc[p]]*(100-polls.loc[0, dc[p]])/(10000*zz))
+        vote.loc[p, 'margem'] = str(round(polls.loc[0, dc[p]]-margem,1))+'-'+str(round(polls.loc[0, dc[p]]+margem,1))
+        vote.loc[p, 'mandatos'] = u.loc[p,'ic']   
     st.write(vote.style.format({'% votos':'{:0,.1f}'}))
     pp=detailed_district.iloc[:,:-1].groupby('circulo').agg(f).astype(int)
     #pp.to_csv('circulos_2019_10_04.csv',sep=',')
+    st.caption('Intervalos de confiança de 95%')
     st.markdown('**Distribuição dos mandatos nos círculos eleitorais**')
     dff = pd.DataFrame()
     for c in pp.index:
@@ -147,6 +151,8 @@ if option == 'Sondagens e Resultados':
             dff.loc['Total', p] = str(u.loc[p,'inf'])+"-"+str(u.loc[p,'sup'])  
         #dff.loc['Agregado Sondagens', p] =  str(u.loc[p,'med'])
     st.write(dff)
+    st.caption('Intervalos de confiança de 95%')
+
 
 if option == 'Partidos e Coligações':
 
@@ -229,12 +235,15 @@ if option == 'Partidos e Coligações':
             col1.metric("Mínimo", cq[0.025], "")
             col2.metric("Máximo", cq[0.975], "")
             col3.metric("Prob de Maioria Absoluta", str(prob_maioria)+'%',"")
+            
             titulo = 'Partido: '+string_col
     
         #plt.ylabel('% de Simulações')
         #plt.xlabel('Número de Assentos')
+        st.caption('Os valores mínimo e máximo referem-se aos limites do \
+            intervalo de confiança de 95%')
         fig, ax = plt.subplots()
-        ax=coligacao.hist(figsize=(10,2), facecolor = 'gray', alpha=0.7, 
+        ax=coligacao.hist(figsize=(10,4), facecolor = 'gray', alpha=0.7, 
                             bins=range(min(coligacao),max(coligacao+2)), cumulative=0, density=True)
         ax.set_xticks(tick)
         ax.axvline(116, linewidth=4)
