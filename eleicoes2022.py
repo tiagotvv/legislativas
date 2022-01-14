@@ -36,7 +36,8 @@ data_load_state.text('Loading data... done!')
 
 option = st.selectbox(
      'Escolha uma das opções:',
-     ('Início','Sondagens e Resultados', 'Partidos e Coligações', 'Circulos Eleitorais'))
+     ('Início','Sondagens e Resultados', 'Partidos e Coligações', 
+     'Circulos Eleitorais', 'Calculadora da Viabilidade'))
 
 #st.write('Tópico:', option)
 
@@ -79,6 +80,11 @@ if option == 'Início':
     st.write('A opção **Círculos Eleitorais** fornece informação detalhada a respeito da probabilidade de um candidato \
     de uma lista partidária ser eleito no círculo eleitoral em que concorre. Responde perguntas do tipo: "Qual a \
     probabilidade do candidato número 3 da lista do PAN ser eleito no círculo de Lisboa?' )
+
+    st.write('Na opção **Calculadora da Viabilidade** pode-se explorar os possíveis cenários\
+    de votação na Assembleia da República para viabilizar ou rejeitar o novo governo e, baseado\
+    nos resultados das simulações, é obtida uma estimativa para a probabilidade de um governo ser aceito. Há 2 \
+    opções de partidos formadores de governo: PS e PSD.' )
 
     st.caption('Atualizado: 14/1/2022' )
 if option == 'Sondagens e Resultados':
@@ -317,3 +323,138 @@ if option == 'Circulos Eleitorais':
     st.markdown('**Circulo Selecionado: ' + circ+"**")
 
     st.write(resultado_partidario[:min(24,seats[circ])].style.apply(HIGHLIGHT_COLOR).format('{:.1f}'))
+
+if option == 'Calculadora da Viabilidade':
+    
+    formador = st.radio(
+     "Escolha o partido que deseja formar governo",
+     ('PS', 'PSD'))
+
+    st.write('Utilize os sliders para mudar a opção de voto dos partidos')
+    col1, col2, col3 = st.columns(3)
+
+    if formador == 'PS':
+
+        psd_v = col1.select_slider(
+        'Opçao de voto do PSD',
+        options=['viabiliza', 'abstenção', 'rejeita'],  key=0)
+        #st.write('Voto do PSD: ', psd_v)
+    
+    else:
+
+        ps_v = col1.select_slider(
+        'Opção de voto do PS',
+        options=['viabiliza', 'abstenção', 'rejeita'],  key=1)
+        #st.write('Voto do PS: ', ps_v)
+
+    cds_v = col3.select_slider(
+     'Opção de voto do CDS-PP',
+     options=['viabiliza', 'abstenção', 'rejeita'], key=2)
+    #st.write('Voto do CDS-PP:', cds_v)
+    be_v = col1.select_slider(
+     'Opção de voto do BE',
+     options=['viabiliza', 'abstenção', 'rejeita'], key=2)
+    #st.write('Voto do BE:', be_v)
+    cdu_v = col3.select_slider(
+     'Opção de voto da CDU',
+     options=['viabiliza', 'abstenção', 'rejeita'], key=2)
+    #st.write('Voto da CDU:', cdu_v)
+    il_v = col1.select_slider(
+     'Opção de voto da IL',
+     options=['viabiliza', 'abstenção', 'rejeita'], key=2)
+    #st.write('Voto da IL:', il_v)
+    ch_v = col3.select_slider(
+     'Opção de voto do Chega',
+     options=['viabiliza', 'abstenção', 'rejeita'], key=2)
+    #st.write('Voto do Chega:', ch_v)
+    pan_v = col1.select_slider(
+     'Opção de voto do PAN',
+     options=['viabiliza', 'abstenção', 'rejeita'], key=2)
+    #st.write('Voto do PAN:', pan_v)
+    livre_v = col3.select_slider(
+     'Opção de voto do LIVRE',
+     options=['viabiliza', 'abstenção', 'rejeita'], key=2)
+    #st.write('Voto do LIVRE:', livre_v)
+
+    lista_favor = []
+    lista_contra = []
+    lista_abstencao = []
+
+    if formador == 'PS':
+        if psd_v == 'viabiliza':
+            lista_favor.append('PSD')
+        elif psd_v == 'rejeita':
+            lista_contra.append('PSD')
+        else:
+            lista_abstencao.append('PSD')
+    else:
+        if ps_v == 'viabiliza':
+            lista_favor.append('PS')
+        elif ps_v == 'rejeita':
+            lista_contra.append('PS')
+        else:
+            lista_abstencao.append('PS')
+
+    
+    if cds_v == 'viabiliza':
+        lista_favor.append('CDS-PP')
+    elif cds_v == 'rejeita':
+        lista_contra.append('CDS-PP')
+    else:
+        lista_abstencao.append('CDS-PP')
+    
+    if be_v == 'viabiliza':
+        lista_favor.append('BE')
+    elif be_v == 'rejeita':
+        lista_contra.append('BE')
+    else:
+        lista_abstencao.append('BE')
+    
+    if cdu_v == 'viabiliza':
+        lista_favor.append('CDU')
+    elif cdu_v == 'rejeita':
+        lista_contra.append('CDU')
+    else:
+        lista_abstencao.append('CDU')
+        
+    if il_v == 'viabiliza':
+        lista_favor.append('IL')
+    elif il_v == 'rejeita':
+        lista_contra.append('IL')
+    else:
+        lista_abstencao.append('IL')
+        
+    if ch_v == 'viabiliza':
+        lista_favor.append('Chega')
+    elif ch_v == 'rejeita':
+        lista_contra.append('Chega')
+    else:
+        lista_abstencao.append('Chega')
+
+    if pan_v == 'viabiliza':
+        lista_favor.append('PAN')
+    elif pan_v == 'rejeita':
+        lista_contra.append('PAN')
+    else:
+        lista_abstencao.append('PAN')
+
+    if livre_v == 'viabiliza':
+        lista_favor.append('LIVRE')
+    elif livre_v == 'rejeita':
+        lista_contra.append('LIVRE')
+    else:
+        lista_abstencao.append('LIVRE')
+    
+    
+    partidos_favor = lista_favor
+    partidos_contra = lista_contra
+    partidos_abstencao = lista_abstencao
+
+    #st.write(lista_favor)
+    #st.write(lista_contra)
+    #st.write(lista_abstencao)
+
+    prob_viab =((sim_df[formador] +sim_df[partidos_favor].sum(axis=1)-sim_df[partidos_contra].sum(axis=1))>0).sum()/100
+
+    st.markdown('****Com esta configuração de votos na AR, em '+ str(round(prob_viab,1))+'%\
+     das simulações o '+formador+' conseguiria formar governo.****')
