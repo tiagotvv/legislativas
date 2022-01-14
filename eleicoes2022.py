@@ -243,7 +243,7 @@ if option == 'Partidos e Coligações':
         st.caption('Os valores mínimo e máximo referem-se aos limites do \
             intervalo de confiança de 95%')
         fig, ax = plt.subplots()
-        ax=coligacao.hist(figsize=(10,4), facecolor = 'gray', alpha=0.7, 
+        ax=coligacao.hist(figsize=(10,5), facecolor = 'gray', alpha=0.7, 
                             bins=range(min(coligacao),max(coligacao+2)), cumulative=0, density=True)
         ax.set_xticks(tick)
         ax.axvline(116, linewidth=4)
