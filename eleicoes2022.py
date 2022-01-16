@@ -7,7 +7,7 @@ from matplotlib.ticker import PercentFormatter
 
 
 st.title('Eleições Legislativas 2022')
-st.caption('Atualizado: 14/1/2022 - 22h50' )
+st.caption('Atualizado: 16/1/2022 - 10h00' )
 
 DETAILED_URL = ('./detailed_district.csv')
 TOTAL_URL = ('./sim_df.csv')
@@ -75,7 +75,7 @@ if option == 'Início':
     st.write('A opção **Sondagens e Resultados** apresenta uma tabela com a lista de sondagens utilizadas\
     pelo simulador e também apresenta os resultados globais e a distribuição dos mandatos nos círculos eleitorais')
 
-    st.write('Na opção **Partidos e Coligaçóes** é possível ver em detalhes o resultado de um partido individualmente ou criar \
+    st.write('Na opção **Partidos e Coligações** é possível ver em detalhes o resultado de um partido individualmente ou criar \
     coligações hipotéticas.')
 
     st.write('A opção **Círculos Eleitorais** fornece informação detalhada a respeito da probabilidade de um candidato \
