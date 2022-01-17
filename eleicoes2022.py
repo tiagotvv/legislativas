@@ -456,21 +456,29 @@ if option == 'Calculadora da Viabilidade':
     #st.write(lista_abstencao)
 
     prob_viab =((sim_df[formador] +sim_df[partidos_favor].sum(axis=1)-sim_df[partidos_contra].sum(axis=1))>0).sum()/100
+    prob_rejabs =((sim_df[partidos_contra].sum(axis=1))>115).sum()/100
+    prob_rejrel =((((sim_df[partidos_contra].sum(axis=1))<=115)&(sim_df[formador] +sim_df[partidos_favor].sum(axis=1)-sim_df[partidos_contra].sum(axis=1))==0)).sum()/100
 
-    st.markdown('****Com esta configuração de votos na AR,em '+ str(round(prob_viab,1))+'%\
-     das simulações o '+formador+' conseguiria formar governo.****')
-    
-    
+        
     cq_f = (sim_df[formador]+sim_df[partidos_favor].sum(axis=1)).quantile([0.025,0.975]).fillna(0).astype(int).T
     cq_c = sim_df[partidos_contra].sum(axis=1).quantile([0.025,0.975]).fillna(0).astype(int).T
     cq_a = sim_df[partidos_abstencao].sum(axis=1).quantile([0.025,0.975]).fillna(0).astype(int).T
 
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3 = st.columns(3)
     c1.metric("Votos pela viabilização", str(cq_f[0.025])+"-"+str(cq_f[0.975]),"")
     c2.metric("Votos pela rejeição", str(cq_c[0.025])+"-"+str(cq_c[0.975]),"")
     c3.metric("Abstenções", str(cq_a[0.025])+"-"+str(cq_a[0.975]),"")
-    c4.metric("Probabilidade de sucesso", str(round(prob_viab,1))+'%',"")
-    c1.caption('Intervalos de confiança de 95%')
+
+    c1.metric("Aprovação", str(round(prob_viab,1))+'%',"")
+    c2.metric("Empate ou Rejeição (relativa)", str(round(100-prob_viab-prob_rejabs,1))+'%',"")
+    c3.metric("Rejeição (maioria absoluta)", str(round(prob_rejabs,1))+'%',"")
+    #c5.metric("Rejeitado(*)", str(round(prob_rej,1))+'%',"")
+    
+    st.caption('O art 192, al 4 da CRP diz que "A rejeição do programa do Governo \
+    exige maioria absoluta dos Deputados em efetividade de funções"')
+    st.caption('O art 195 da CRP diz que " Implicam a demissão do Governo: \
+    d) A rejeição do programa do Governo"')
+
 
 
 
