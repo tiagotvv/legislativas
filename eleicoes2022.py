@@ -7,7 +7,7 @@ from matplotlib.ticker import PercentFormatter
 
 
 st.title('Eleições Legislativas 2022')
-st.caption('Atualizado: 16/1/2022 - 10h00' )
+st.caption('Atualizado: 18/1/2022 - 20h45' )
 
 DETAILED_URL = ('./detailed_district.csv')
 TOTAL_URL = ('./sim_df.csv')
