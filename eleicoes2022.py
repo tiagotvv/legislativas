@@ -87,6 +87,9 @@ if option == 'Início':
     nos resultados das simulações, é obtida uma estimativa para a probabilidade de um governo ser aceito. Há 2 \
     opções de partidos formadores de governo: PS e PSD.' )
 
+    st.caption('Autor: Tiago T. V. Vinhoza: ' + 'https://twitter.com/tiagotvv')
+
+
 
 if option == 'Sondagens e Resultados':
 
