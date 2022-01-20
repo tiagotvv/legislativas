@@ -305,7 +305,7 @@ if option == 'Circulos Eleitorais':
        'Portalegre':2, 'Porto':40, 'Santarem':9, 'Setubal':18, 'Viana do Castelo':6,
        'Vila Real':5, 'Viseu':8, 'zExterior - Europa':2, 'zExterior - Fora Europa':2}
     
-    st.markdown("***A tebela é lida da seguinte forma: a entrada na linha N de cada partido é a % \
+    st.markdown("***A tabela é lida da seguinte forma: a entrada na linha N de cada partido é a % \
     de simulações em que o candidato N da lista conseguiu ser eleito.***")
     resultado_partidario = pd.DataFrame()
 
