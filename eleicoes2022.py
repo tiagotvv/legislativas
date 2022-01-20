@@ -13,7 +13,7 @@ DETAILED_URL = ('./detailed_district.csv')
 TOTAL_URL = ('./sim_df.csv')
 POLLS_URL = ('./polls_agreg.csv')
 
-@st.cache
+
 def load_data():
     detailed = pd.read_csv(DETAILED_URL)
     total = pd.read_csv(TOTAL_URL)
