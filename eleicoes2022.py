@@ -7,7 +7,7 @@ from matplotlib.ticker import PercentFormatter
 
 
 st.title('Eleições Legislativas 2022')
-st.caption('Atualizado: 20/1/2022 - 20h30' )
+st.caption('Atualizado: 21/1/2022 - 22h00' )
 
 DETAILED_URL = ('./detailed_district.csv')
 TOTAL_URL = ('./sim_df.csv')
@@ -40,22 +40,16 @@ option = st.selectbox(
      ('Início','Sondagens e Resultados', 'Partidos e Coligações', 
      'Circulos Eleitorais', 'Calculadora da Viabilidade'))
 
-#st.write('Tópico:', option)
+
 
 u=sim_df.quantile([0.025,0.975]).astype(int).T
 #u2019 = [79,108,5,19,12,4,1,1,1]
-#v, _ = allocate_seats(votes[:-1])
-
-
-#u[0.5] = v.astype(int)
-#u['vs 2019'] = u[0.5]-u2019
 
 cols = u.columns.tolist()
 cols[0] = 'inf'
 cols[1] = 'sup'
 u.columns = cols
-#cols = [cols[i] for i in [0,3,1,2]]
-#u = u[u.columns[[0,3,1,2]]]
+
 u = u.sort_values(by=['inf','sup'],ascending=False)
 for p in sim_df.columns:
     if (u.loc[p,'inf'])==(u.loc[p,'sup']):
@@ -141,7 +135,6 @@ if option == 'Sondagens e Resultados':
         vote.loc[p, 'mandatos'] = u.loc[p,'ic']   
     st.write(vote.style.format({'% votos':'{:0,.1f}'}))
     pp=detailed_district.iloc[:,:-1].groupby('circulo').agg(f).astype(int)
-    #pp.to_csv('circulos_2019_10_04.csv',sep=',')
     st.caption('Intervalos de confiança de 95%')
     st.markdown('**Distribuição dos mandatos nos círculos eleitorais**')
     dff = pd.DataFrame()
@@ -159,7 +152,6 @@ if option == 'Sondagens e Resultados':
             dff.loc['Total', p] = str(u.loc[p,'sup'])
         else:
             dff.loc['Total', p] = str(u.loc[p,'inf'])+"-"+str(u.loc[p,'sup'])  
-        #dff.loc['Agregado Sondagens', p] =  str(u.loc[p,'med'])
     st.write(dff)
     st.caption('Intervalos de confiança de 95%')
 
@@ -261,11 +253,6 @@ if option == 'Partidos e Coligações':
         ax.set_xlabel('Número de Assentos')
         ax.set_ylabel('% de simulações')
         ax.set_title(titulo)
-        #ax.set_xlim(3,20)
-        #ax.set_xticks(np.arange(3,21)+0.5)
-        #ax.set_xticklabels(range(3,21),rotation=45)
-        #ax.set_ylim(0,0.75)
-        #ax.grid('off')
         ax.set_xlim(min(tick)-0.5, max(tick)+0.5)
         ax.yaxis.set_major_formatter(PercentFormatter(1))
         st.pyplot(fig)
@@ -311,17 +298,13 @@ if option == 'Circulos Eleitorais':
 
     for partido in sorted_parties:
         single_district = detailed_district.loc[(detailed_district['circulo'] ==circ), partido].astype(int)
-        #single_district.value_counts()/100
         bbb = detailed_district.loc[(detailed_district['circulo'] ==circ), partido].astype(int)
-        #max_val = detailed_district.loc[(detailed_district['circulo'] ==circ)].iloc[:,:-3].astype(int).max().max()
 
         bbb= (round(bbb.astype(pd.api.types.CategoricalDtype(categories=range(25))).value_counts()/100,5)).sort_index()
     
         resultado_partidario[partido] = bbb
     resultado_partidario = resultado_partidario.loc[1:]
-     #   resultado_partidario.loc[circ,] = 1
-    #display((resultado_partidario[resultado_partidario == 0] ).fillna(''))
-    #resultado_partidario = 100-resultado_partidario.cumsum()
+
     resultado_partidario = round(resultado_partidario[::-1].cumsum()[::-1],1)
     
     st.markdown('**Circulo Selecionado: ' + circ+"**")
@@ -342,43 +325,34 @@ if option == 'Calculadora da Viabilidade':
         psd_v = col1.select_slider(
         'Opçao de voto do PSD',
         options=['viabiliza', 'abstenção', 'rejeita'],  key=0)
-        #st.write('Voto do PSD: ', psd_v)
     
     else:
 
         ps_v = col1.select_slider(
         'Opção de voto do PS',
         options=['viabiliza', 'abstenção', 'rejeita'],  key=1)
-        #st.write('Voto do PS: ', ps_v)
 
     cds_v = col3.select_slider(
      'Opção de voto do CDS-PP',
      options=['viabiliza', 'abstenção', 'rejeita'], key=2)
-    #st.write('Voto do CDS-PP:', cds_v)
     be_v = col1.select_slider(
      'Opção de voto do BE',
      options=['viabiliza', 'abstenção', 'rejeita'], key=2)
-    #st.write('Voto do BE:', be_v)
     cdu_v = col3.select_slider(
      'Opção de voto da CDU',
      options=['viabiliza', 'abstenção', 'rejeita'], key=2)
-    #st.write('Voto da CDU:', cdu_v)
     il_v = col1.select_slider(
      'Opção de voto da IL',
      options=['viabiliza', 'abstenção', 'rejeita'], key=2)
-    #st.write('Voto da IL:', il_v)
     ch_v = col3.select_slider(
      'Opção de voto do Chega',
      options=['viabiliza', 'abstenção', 'rejeita'], key=2)
-    #st.write('Voto do Chega:', ch_v)
     pan_v = col1.select_slider(
      'Opção de voto do PAN',
      options=['viabiliza', 'abstenção', 'rejeita'], key=2)
-    #st.write('Voto do PAN:', pan_v)
     livre_v = col3.select_slider(
      'Opção de voto do LIVRE',
      options=['viabiliza', 'abstenção', 'rejeita'], key=2)
-    #st.write('Voto do LIVRE:', livre_v)
 
     lista_favor = []
     lista_contra = []
@@ -454,9 +428,6 @@ if option == 'Calculadora da Viabilidade':
     partidos_contra = lista_contra
     partidos_abstencao = lista_abstencao
 
-    #st.write(lista_favor)
-    #st.write(lista_contra)
-    #st.write(lista_abstencao)
 
     prob_viab =((sim_df[formador] +sim_df[partidos_favor].sum(axis=1)-sim_df[partidos_contra].sum(axis=1))>0).sum()/100
     prob_rejabs =((sim_df[partidos_contra].sum(axis=1))>115).sum()/100
@@ -475,7 +446,6 @@ if option == 'Calculadora da Viabilidade':
     c1.metric("Aprovação", str(round(prob_viab,1))+'%',"")
     c2.metric("Empate ou Rejeição (relativa)", str(round(100-prob_viab-prob_rejabs,1))+'%',"")
     c3.metric("Rejeição (maioria absoluta)", str(round(prob_rejabs,1))+'%',"")
-    #c5.metric("Rejeitado(*)", str(round(prob_rej,1))+'%',"")
     
     st.caption('O art 192, al 4 da CRP diz que "A rejeição do programa do Governo \
     exige maioria absoluta dos Deputados em efetividade de funções"')
