@@ -157,7 +157,7 @@ if option == 'Sondagens e Resultados':
             dff.loc['Total', p] = str(u.loc[p,'sup'])
         else:
             dff.loc['Total', p] = str(u.loc[p,'inf'])+"-"+str(u.loc[p,'sup'])  
-    st.table(dff)
+    st.write(dff)
     st.caption('Intervalos de confiança de 95%')
 
 
