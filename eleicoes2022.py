@@ -7,7 +7,7 @@ from matplotlib.ticker import PercentFormatter
 
 
 st.title('Eleições Legislativas 2022')
-st.caption('Atualizado: 26/1/2022 - 21h25' )
+st.caption('Atualizado: 27/1/2022 - 18h45' )
 
 DETAILED_URL = ('./detailed_district.csv')
 TOTAL_URL = ('./sim_df.csv')
@@ -38,7 +38,7 @@ data_load_state.text('Loading data... done!')
 option = st.selectbox(
      'Escolha uma das opções:',
      ('Início','Sondagens e Resultados', 'Partidos e Coligações', 
-     'Circulos Eleitorais', 'Calculadora da Viabilidade'))
+     'Circulos Eleitorais', 'Calculadora da Viabilidade', 'Quadro-Resumo'))
 
 
 
@@ -80,6 +80,10 @@ if option == 'Início':
     de votação na Assembleia da República para viabilizar ou rejeitar o novo governo e, baseado\
     nos resultados das simulações, é obtida uma estimativa para a probabilidade de um governo ser aceito. Há 2 \
     opções de partidos formadores de governo: PS e PSD.' )
+
+    st.write('Na opção **Quadro-Resumo** encontra-se as probabilidades de vitória (em termos \
+    de número de mandatos do PS e PSD e as probabilidades de maioria absoluta de esquerda \
+    e de direita (incluindo ou não o PAN).' )
 
     st.caption('Autor: Tiago T. V. Vinhoza: ' + 'https://twitter.com/tiagotvv')
 
@@ -134,6 +138,7 @@ if option == 'Sondagens e Resultados':
         vote.loc[p, 'margem'] = str(round(polls.loc[0, dc[p]]-margem,1))+'-'+str(round(polls.loc[0, dc[p]]+margem,1))
         vote.loc[p, 'mandatos'] = u.loc[p,'ic']   
     st.write(vote.style.format({'% votos':'{:0,.1f}'}))
+
     pp=detailed_district.iloc[:,:-1].groupby('circulo').agg(f).astype(int)
     st.caption('Intervalos de confiança de 95%')
     st.markdown('**Distribuição dos mandatos nos círculos eleitorais**')
@@ -152,7 +157,7 @@ if option == 'Sondagens e Resultados':
             dff.loc['Total', p] = str(u.loc[p,'sup'])
         else:
             dff.loc['Total', p] = str(u.loc[p,'inf'])+"-"+str(u.loc[p,'sup'])  
-    st.write(dff)
+    st.table(dff)
     st.caption('Intervalos de confiança de 95%')
 
 
@@ -452,7 +457,21 @@ if option == 'Calculadora da Viabilidade':
     st.caption('O art 195 da CRP diz que " Implicam a demissão do Governo: \
     d) A rejeição do programa do Governo"')
 
+if option == 'Quadro-Resumo':
+    st.markdown('### Probabilidade de obter mais mandatos')
+    c1,c2,c3 = st.columns(3)
+    c1.metric("PS", str(round(sim_df.query('PS > PSD').shape[0]/100,1))+'%',"")
+    c2.metric("PSD", str(round(sim_df.query('PS < PSD').shape[0]/100,1))+'%',"")
+    c3.metric("Empate", str(round(sim_df.query('PS == PSD').shape[0]/100,1))+'%',"")
 
+    st.markdown('### Probabilidade de maioria absoluta')
+    c1,c2,c3,c4 = st.columns(4)
+    c1.metric("Esquerda", str(round(sim_df.query('PS+BE+CDU+LIVRE > 115').shape[0]/100,1))+'%',"")
+    c2.metric("Esquerda + PAN", str(round(sim_df.query('PS+BE+CDU+LIVRE+PAN > 115').shape[0]/100,1))+'%',"")
+    c3.metric("Direita", str(round(sim_df.query('PSD+`CDS-PP`+IL+Chega > 115').shape[0]/100,1))+'%',"")
+    c4.metric("Direita + PAN", str(round(sim_df.query('PSD+`CDS-PP`+IL+Chega+PAN > 115').shape[0]/100,1))+'%',"")
+    st.write('Esquerda = PS+BE+CDU+LIVRE') 
+    st.write('Direita = PSD+CDS-PP+IL+Chega')
 
 
 
