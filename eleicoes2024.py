@@ -82,8 +82,8 @@ if option == 'Início':
     opções de partidos formadores de governo: PS e AD.' )
 
     st.write('Na opção **Quadro-Resumo** encontra-se as probabilidades de vitória (em termos \
-    de número de mandatos do PS e AD e as probabilidades de maioria absoluta de esquerda \
-    e de direita (incluindo ou não o PAN).' )
+    de número de mandatos do PS e AD, as probabilidades de maioria absoluta de esquerda \
+    e de direita e as principais coligações de esquerda, de direita e "híbridas".' )
 
     st.caption('Autor: Tiago T. V. Vinhoza: ' + 'https://twitter.com/tiagotvv')
 
@@ -473,10 +473,62 @@ if option == 'Quadro-Resumo':
    # c4.metric("Direita + PAN", str(round(sim_df.query('PSD+`CDS-PP`+IL+Chega+PAN > 115').shape[0]/100,1))+'%',"")
    # st.write('Esquerda = PS+BE+CDU+LIVRE') 
    # st.write('Direita = PSD+CDS-PP+IL+Chega')
-    c3.metric("Direita", str(round(sim_df.query('AD+IL+Chega > 115').shape[0]/100,1))+'%',"")
-    c4.metric("Direita + PAN", str(round(sim_df.query('AD+IL+Chega+PAN > 115').shape[0]/100,1))+'%',"")
-    st.write('Esquerda = PS+BE+CDU+LIVRE') 
-    st.write('Direita = AD+IL+Chega')
+    c3.metric("Direita sem Chega", str(round(sim_df.query('AD+IL > 115').shape[0]/100,1))+'%',"")
+    c4.metric("Direita com Chega", str(round(sim_df.query('AD+IL+Chega > 115').shape[0]/100,1))+'%',"")
+    st.write('Esquerda = PS,BE,CDU,LIVRE') 
+    st.write('Direita = AD,IL,Chega')
+
+    st.markdown('### Principais Coligações')
+    c1,c2,c3, c4 = st.columns(4)
+    colig0 = ['PS','BE','CDU','LIVRE','PAN']
+    colig1 = ['PS','BE','CDU','LIVRE']
+    colig2 = ['PS','BE','LIVRE']
+    colig3 = ['PS','BE','CDU']
+    colig4 = ['PS','LIVRE']
+    colig5 = ['PS','BE']
+    colig6 = ['AD', 'IL']
+    colig7 = ['AD', 'IL', 'PAN']
+    colig8 = ['AD','IL', 'LIVRE']
+    colig9 = ['AD','IL','PAN','LIVRE']
+    colig10 = ['AD', 'Chega']
+    colig11 = ['AD', 'IL', 'Chega']
+    colig12 = ['PS', 'PAN']
+    colig13 = ['PS','PAN','LIVRE']
+
+    c1.metric('+'.join(colig0), str(int(sim_df[colig0].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig0].sum(axis=1).quantile([0.025,0.975][1]))))
+
+    c1.metric('+'.join(colig1), str(int(sim_df[colig1].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig1].sum(axis=1).quantile([0.025,0.975][1]))))
+    c1.metric('+'.join(colig2), str(int(sim_df[colig2].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig2].sum(axis=1).quantile([0.025,0.975][1]))))
+    c1.metric('+'.join(colig3), str(int(sim_df[colig3].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig3].sum(axis=1).quantile([0.025,0.975][1]))))
+    c1.metric('+'.join(colig5), str(int(sim_df[colig5].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig5].sum(axis=1).quantile([0.025,0.975][1]))))
+
+
+    c2.metric('+'.join(colig4), str(int(sim_df[colig4].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig4].sum(axis=1).quantile([0.025,0.975][1]))))
+    c2.metric('+'.join(colig12), str(int(sim_df[colig12].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig12].sum(axis=1).quantile([0.025,0.975][1]))))
+    c2.metric('+'.join(colig13), str(int(sim_df[colig13].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig13].sum(axis=1).quantile([0.025,0.975][1]))))
+
+    c3.metric('+'.join(colig7), str(int(sim_df[colig7].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig7].sum(axis=1).quantile([0.025,0.975][1]))))
+    c3.metric('+'.join(colig8), str(int(sim_df[colig8].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig8].sum(axis=1).quantile([0.025,0.975][1]))))
+    c3.metric('+'.join(colig9), str(int(sim_df[colig9].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig9].sum(axis=1).quantile([0.025,0.975][1]))))
+
+    c4.metric('+'.join(colig6), str(int(sim_df[colig6].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig6].sum(axis=1).quantile([0.025,0.975][1]))))
+    c4.metric('+'.join(colig10), str(int(sim_df[colig10].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig10].sum(axis=1).quantile([0.025,0.975][1]))))
+    c4.metric('+'.join(colig11), str(int(sim_df[colig11].sum(axis=1).quantile([0.025,0.975][0])))+
+    '-'+str(int(sim_df[colig11].sum(axis=1).quantile([0.025,0.975][1]))))
+
 
 
 
