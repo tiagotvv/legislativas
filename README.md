@@ -1,6 +1,6 @@
-# Portugal: Eleições Legislativas 2022
+# Portugal: Eleições Legislativas 2024
 
-Link to streamlit app: https://share.streamlit.io/tiagotvv/legislativas2022/main/eleicoes2022.py
+Link to streamlit app: https://legislativas2024.streamlit.app/
 
 Nesta web app encontram-se algumas análises realizadas nos resultados de 10000 simulações do ato eleitoral. As simulações usam como ponto de partida um agregado das sondagens mais recentes. As sondagens que compõem este agregado são pesadas de acordo com o número de entrevistas e também de acordo com a data em que foi realizada.
 
